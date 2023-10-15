@@ -1,16 +1,20 @@
-import express, { Request, Response } from 'express';
+import express from 'express';
+import { root } from './routes/root';
+import { logger } from './logger';
 
 const app = express();
 const port = process.env.PORT || 80;
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('hi');
-});
+function setupExpress() {
+  app.route('/').get(root);
+}
 
-app.post('/', (req: Request, res: Response): Response => {
-  return res.send('hi');
-});
+function startServer() {
+  app.listen(port, () => {
+    logger.info(`Application is running at port ${port}`);
+  });
+}
 
-app.listen(port, () => {
-  console.info(`App is running on port ${port}`);
-});
+setupExpress();
+
+startServer();

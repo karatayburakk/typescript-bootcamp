@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "build": "tsc",
-    "start:dev": "tsc-watch --onSuccess \"node dist/app.js\""
+    "start:dev": "tsc-watch --onSuccess \"node --env-file=.env dist/app.js\"",
+    "start": "node dist/app.js"
   },
   "repository": {
     "type": "git",
@@ -24,6 +25,7 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "winston": "^3.11.0"
   }
 }
