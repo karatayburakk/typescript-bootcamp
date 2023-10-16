@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 import { Course } from './course';
 
-@Entity({ name: 'LESSONS' })
+@Entity()
 export class Lesson {
   @PrimaryGeneratedColumn()
   id: number;
@@ -23,7 +23,7 @@ export class Lesson {
   @Column()
   seqNo: number;
 
-  @ManyToOne(() => Course, (course) => course.lesssons)
+  @ManyToOne(() => Course, (course) => course.lessons)
   @JoinColumn({ name: 'courseId' })
   course: Course;
 
