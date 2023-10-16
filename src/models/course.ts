@@ -1,7 +1,7 @@
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { Lesson } from './lesson';
 
-@Entity({ name: 'COURSES' })
+@Entity()
 export class Course {
   @PrimaryGeneratedColumn()
   id: number;
@@ -13,7 +13,7 @@ export class Course {
   title: string;
 
   @Column()
-  iconURL: string;
+  iconUrl: string;
 
   @Column()
   longDescription: string;
@@ -22,7 +22,7 @@ export class Course {
   category: string;
 
   @OneToMany(() => Lesson, (lesson) => lesson.course)
-  lesssons: Lesson[];
+  lessons: Lesson[];
 
   @CreateDateColumn()
   createdAt: Date;
