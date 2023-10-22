@@ -1,9 +1,11 @@
 import 'reflect-metadata';
 import { AppDataSource } from '../data-source';
-import { COURSES } from './db-data';
+import { COURSES, USERS } from './db-data';
 import { DeepPartial } from 'typeorm';
 import { Course } from './course';
 import { Lesson } from './lesson';
+import { User } from './user';
+import { calculatePasswordHash } from '../utils';
 
 async function populateDb() {
   await AppDataSource.initialize();
@@ -32,6 +34,24 @@ async function populateDb() {
 
       await lessonRepository.save(lesson);
     }
+  }
+
+  const users = Object.values(USERS) as any[];
+
+  for (let userData of users) {
+    console.log(`Inserting User: ${userData}`);
+
+    const { email, pictureUrl, isAdmin, passwordSalt, plainTextPassword } = userData;
+
+    const user = AppDataSource.getRepository(User).create({
+      email,
+      pictureUrl,
+      isAdmin,
+      passwordSalt,
+      passwordHash: await calculatePasswordHash(plainTextPassword, passwordSalt),
+    });
+
+    await AppDataSource.manager.save(user);
   }
 
   const totalCourses = await courseRepository.createQueryBuilder().getCount();

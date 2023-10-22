@@ -12,6 +12,10 @@ import { updateCourse } from './routes/update-course';
 import { findCourseById } from './routes/find-course-by-id';
 import { createCourse } from './routes/create-course';
 import { deleteCourseAndLessons } from './routes/delete-course';
+import { createUser } from './routes/create-user';
+import { login } from './routes/login';
+import { checkIfAuthenticated } from './middlewares/authentication-middleware';
+import { checkIfAdmin } from './middlewares/only-admin.middleware';
 
 const app = express();
 const port = process.env.PORT || 80;
@@ -23,19 +27,23 @@ function setupExpress(): void {
 
   app.route('/').get(root);
 
-  app.route('/api/courses').get(getAllCourses);
+  app.route('/api/courses').get(checkIfAuthenticated, getAllCourses);
 
-  // app.route('/api/courses/:courseUrl').get(findCourseByUrl);
+  app.route('/api/courses/:courseUrl').get(checkIfAuthenticated, findCourseByUrl);
 
-  app.route('/api/courses/:courseId').get(findCourseById);
+  // app.route('/api/courses/:courseId').get(findCourseById);
 
-  app.route('/api/courses/:courseId/lessons').get(findLessonsForCourse);
+  app.route('/api/courses/:courseId/lessons').get(checkIfAuthenticated, findLessonsForCourse);
 
-  app.route('/api/courses/:courseId').patch(updateCourse);
+  app.route('/api/courses/:courseId').patch(checkIfAuthenticated, updateCourse);
 
-  app.route('/api/courses').post(createCourse);
+  app.route('/api/courses').post(checkIfAuthenticated, createCourse);
 
-  app.route('/api/courses/:courseId').delete(deleteCourseAndLessons);
+  app.route('/api/courses/:courseId').delete(checkIfAuthenticated, deleteCourseAndLessons);
+
+  app.route('/api/users').post(checkIfAuthenticated, checkIfAdmin, createUser);
+
+  app.route('/api/login').post(login);
 
   app.use(globalErrorHandler);
 }
